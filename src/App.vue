@@ -1,6 +1,8 @@
 <template>
   <div id="app">
+    <keep-alive>
     <router-view></router-view>
+    </keep-alive>
     <!-- 驼峰命名在这里不能使用，只能用连接符 -->
     <tab-bar>
       <tab-bar-item path="/home" activeColor="blue">
