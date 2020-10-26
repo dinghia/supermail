@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <keep-alive>
-    <router-view></router-view>
+    <!-- 注意exclude里面的值是组件对应的路由 -->
+    <keep-alive exclude="detail">
+      <router-view></router-view>
     </keep-alive>
     <!-- 驼峰命名在这里不能使用，只能用连接符 -->
     <tab-bar>

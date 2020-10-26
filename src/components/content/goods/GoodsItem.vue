@@ -1,8 +1,6 @@
 <template>
-    <div class="goods-item">
-        <a href="">
-            <img :src="goodsItem.show.img" alt="" @load="imageLoad">
-        </a>
+    <div class="goods-item" @click="itemClick">
+        <img :src="getImg" alt="" @load="imageLoad">
         <div class="goods-info">
             <p>{{goodsItem.title}}</p>
             <span class="price">{{goodsItem.price}}</span>
@@ -25,8 +23,18 @@ export default {
         imageLoad(){
             // console.log("imageload")
             this.$bus.$emit('itemImageLoad')
+        },
+        //点击跳转到详情页
+        itemClick(){
+            // console.log("xiangqiangye")
+            this.$router.push("/detail/"+this.goodsItem.iid)
         }
-    }
+    },
+    computed:{
+        getImg(){
+            return this.goodsItem.image || this.goodsItem.show.img
+        }
+    },
 }
 </script>
 <style>
@@ -35,7 +43,7 @@ export default {
       margin-bottom: 10px;
       /* position: relative; */
   } 
-  .goods-item a img{
+  .goods-item img{
       width: 100%;
       border-radius: 5px;
   }

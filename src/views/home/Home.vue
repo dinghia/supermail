@@ -42,7 +42,7 @@ import FeatureView from "./childrenCpns/FeatureView"
 import HomeSwiper from "./childrenCpns/HomeSwiper"
 
 import {getHomeMultidata,getHomeGoods} from 'network/home'
-
+import {debounce} from 'common/utils'
 export default {
     name:'home',
     components:{
@@ -72,6 +72,7 @@ export default {
             isLoad:false,
             isTabFixed:false,
             saveY:0,
+            itemImgListener:null,
         }
     },
     created(){
@@ -87,19 +88,27 @@ export default {
         this.$refs.scroll.refresh();
     },
     deactivated(){
+        //保存y值
         this.saveY=this.$refs.scroll.scroll.y
+        //在离开组件时，取消监听事件总线
+        this.$bus.$off('itemImageLoad',this.itemImgListener)
     },
     mounted(){
         //将频繁执行的函数进行防抖处理
-        const refresh = this.debounce(this.$refs.scroll.refresh,200);
+        const refresh = debounce(this.$refs.scroll.refresh,200);
 
         //监听image图片加载完毕
-        this.$bus.$on("itemImageLoad",()=>{
+        // this.$bus.$on("itemImageLoad",()=>{
             //这个函数要被多次执行，所以对其进行防抖处理
             // this.$refs.scroll.refresh()
             // 调用防抖处理之后的函数
+            // refresh();
+        // })
+        //抽离函数
+        this.itemImgListener=()=>{
             refresh();
-        })
+        }
+        this.$bus.$on("itemImageLoad",this.itemImgListener)
     },
     methods:{
         // 这是自己定义的函数
@@ -153,17 +162,7 @@ export default {
             //此时只能实现上拉加载更多的功能一次，必须添加finish函数
             //这里在getHomeGoods的最后进行，调用scroll的finish函数
         },
-        //防抖函数
-        debounce(func,delay){
-            let timer = null
-            return function(...args){
-                if(timer) clearTimeout(timer)
-
-                timer = setTimeout(()=>{
-                    func.apply(this,args)
-                },delay)
-            }
-        },
+        
         swiperImageLoad(){
             if(!this.isLoad){
                 this.tabOffsetTop=this.$refs.tabControl2.$el.offsetTop;

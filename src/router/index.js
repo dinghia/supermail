@@ -8,6 +8,8 @@ const Category = () =>
     import ('../views/category/Category')
 const My = () =>
     import ('../views/my/My')
+const Detail = () =>
+    import ('../views/details/Detail')
 
 Vue.use(VueRouter)
 
@@ -26,6 +28,9 @@ const routes = [{
 }, {
     path: '/my',
     component: My,
+}, {
+    path: '/detail/:iid',
+    component: Detail,
 }]
 
 const router = new VueRouter({
